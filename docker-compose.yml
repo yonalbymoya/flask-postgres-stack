@@ -1,0 +1,35 @@
+version: '3,8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    environment:
+      POSTGRES_DB: testdb
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      DB_HOST: db
+    networks:
+      - redapp
+
+    db:
+      image: postgres:15
+      environment:
+        POSTGRES_DB: testdb
+        POSTGRES_USER: user
+        POSTGRES_PASSWORD: password
+      volumes:
+        - db-data:/var/lib/postgresql/data
+        - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql
+      networks:
+        - redapp
+
+networks:
+  redapp:
+
+volumes:
+  db-data:
+
